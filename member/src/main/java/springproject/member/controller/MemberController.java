@@ -1,5 +1,6 @@
 package springproject.member.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +35,32 @@ public class MemberController {
     @PostMapping("/member/save")
     public String saveV2(@ModelAttribute MemberDTO memberDTO) { //DTO의 필드명과 받아온 name 속성이 같다면 자동으로 담음
 
-        System.out.println("MemberController.save");
-        System.out.println("memberDTO = " + memberDTO);
         memberService.save(memberDTO);
 
-        return "index";
+        return "login";
+    }
+
+    @GetMapping("/member/login")
+    public String loginForm() {
+        return "login";
+    }
+
+    @PostMapping("/member/login")
+    public String login(@ModelAttribute MemberDTO memberDTO, HttpSession session) {
+        MemberDTO loginResult = memberService.login(memberDTO);
+        if (loginResult != null) {
+            //login 성공
+            // session 사용 로그인 유지
+            session.setAttribute("loginEmail", loginResult.getMemberEmail());
+            return "main";
+        } else {
+            //login 실패
+            return "fail";
+        }
+    }
+
+    @GetMapping("/member/login/fail")
+    public String loginFail() {
+        return "fail";
     }
 }
