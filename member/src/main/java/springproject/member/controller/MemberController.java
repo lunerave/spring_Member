@@ -4,10 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import springproject.member.dto.MemberDTO;
 import springproject.member.service.MemberService;
 
@@ -58,13 +55,8 @@ public class MemberController {
             return "main";
         } else {
             //login 실패
-            return "fail";
+            return "login-fail";
         }
-    }
-
-    @GetMapping("/member/login/fail")
-    public String loginFail() {
-        return "fail";
     }
 
     @GetMapping("/member")
@@ -72,5 +64,17 @@ public class MemberController {
         List<MemberDTO> memberDTOList = memberService.findAll();
         model.addAttribute("memberList", memberDTOList);
         return "list";
+    }
+
+    @GetMapping("/member/{memberId}")
+    public String findById(@PathVariable Long memberId, Model model) {
+        MemberDTO memberDTO = memberService.findById(memberId);
+        if (memberDTO != null) {
+            model.addAttribute("member", memberDTO);
+            return "member";
+        } else {
+            return "member-fail";
+        }
+
     }
 }
