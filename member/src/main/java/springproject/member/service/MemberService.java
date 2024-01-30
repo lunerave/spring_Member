@@ -79,4 +79,8 @@ public class MemberService {
     public void update(MemberDTO memberDTO) {
         memberRepository.save(MemberEntity.toUpdateMemberEntity(memberDTO)); //db에 id가 이미 있다면 update가 실행됨
     }
+
+    public void deleteById(Long memberId) {
+        memberRepository.deleteById(memberId);
+    }
 }
